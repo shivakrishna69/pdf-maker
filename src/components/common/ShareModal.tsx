@@ -27,8 +27,18 @@ export const ShareModal: React.FC<ShareModalProps> = ({ onClose }) => {
             });
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(`Server Error (${response.status}): ${errorData.error || response.statusText || 'Failed to generate link'}`);
+                let errorMsg = `Server Error (${response.status})`;
+                try {
+                    const errorData = await response.json();
+                    errorMsg += `: ${errorData.error || response.statusText}`;
+                    if (errorData.stack) console.error('Server Stack:', errorData.stack);
+                } catch {
+                    // If not JSON, get raw text (Vercel error page)
+                    const rawText = await response.text().catch(() => '');
+                    errorMsg += `: ${rawText.substring(0, 100)}...`;
+                    console.error('Raw Server Response:', rawText);
+                }
+                throw new Error(errorMsg);
             }
             const data = await response.json();
 
