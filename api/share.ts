@@ -15,7 +15,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/(^-|-$)/g, '');
 
-            const slug = `${baseSlug || 'report'}-${Math.random().toString(36).substring(2, 8)}`;
+            const slug = `${baseSlug || 'report'}-${nanoid(10)}`;
 
             const result = await sql`
         INSERT INTO reports (slug, report_title, content)
