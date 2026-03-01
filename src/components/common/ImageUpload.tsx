@@ -24,14 +24,39 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ value, onChange, label
         reader.readAsDataURL(file);
     };
 
+    const handlePaste = (e: React.ClipboardEvent) => {
+        const item = e.clipboardData.items[0];
+        if (item?.type.includes('image')) {
+            const file = item.getAsFile();
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const result = event.target?.result as string;
+                    onChange(result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    };
+
     if (value) {
         return (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div
+                style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+                onPaste={handlePaste}
+                tabIndex={0}
+            >
                 <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '100px', backgroundColor: '#f8fafc', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
                     <img
                         src={value}
                         alt="Uploaded content"
-                        style={{ width: '100%', height: '100%', objectFit: fit || 'contain', display: 'block' }}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: fit || 'contain',
+                            display: 'block',
+                            imageRendering: '-webkit-optimize-contrast'
+                        }}
                     />
                     <button
                         onClick={(e) => { e.stopPropagation(); onChange(null); }}
@@ -82,16 +107,21 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ value, onChange, label
     return (
         <div
             onClick={() => fileInputRef.current?.click()}
+            onPaste={handlePaste}
+            tabIndex={0}
             style={{
                 width: '100%', height: '100%', minHeight: '100px',
                 border: '1px dashed var(--color-border)',
                 borderRadius: 'var(--radius-md)',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                color: 'var(--color-text-tertiary)', cursor: 'pointer', backgroundColor: '#f8fafc'
+                color: 'var(--color-text-tertiary)', cursor: 'pointer', backgroundColor: '#f8fafc',
+                outline: 'none'
             }}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') fileInputRef.current?.click(); }}
         >
             <UploadCloud size={24} style={{ marginBottom: '0.5rem' }} />
             <span style={{ fontSize: '0.875rem' }}>{label}</span>
+            <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.25rem' }}>(or Paste Ctrl+V)</span>
             <input
                 type="file"
                 accept="image/*"

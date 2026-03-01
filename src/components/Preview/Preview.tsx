@@ -25,7 +25,7 @@ export const Preview: React.FC = () => {
                             {/* Balanced thumbnail for 50/50 layout */}
                             <div style={{ width: '65px', height: '90px', flexShrink: 0, overflow: 'hidden' }}>
                                 {item.smallImage ? (
-                                    <img src={item.smallImage} alt="Thumbnail" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain' }} />
+                                    <img src={item.smallImage} alt="Thumbnail" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain', imageRendering: '-webkit-optimize-contrast' }} />
                                 ) : (
                                     <div style={{ width: '100%', height: '100%', fontSize: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#cbd5e1', border: '1px dashed #eee' }}>
                                         No Img
