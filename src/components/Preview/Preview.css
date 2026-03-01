@@ -1,0 +1,109 @@
+/* Define Calibri or fallback to sans-serif */
+@font-face {
+    font-family: 'Calibri';
+    src: local('Calibri');
+}
+
+.page-a4 {
+    width: var(--a4-width);
+    min-height: var(--a4-height);
+    background-color: white;
+    box-shadow: var(--shadow-lg);
+    padding: var(--page-margin);
+    position: relative;
+    font-family: 'Calibri', 'Inter', sans-serif;
+    color: #000;
+
+    /* Ensure small thumbnails stay sharp */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+@media print {
+    .page-a4 {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: auto;
+    }
+
+    @page {
+        margin: 15mm;
+    }
+}
+
+/* Inline Editing Styles - Keep them subtle but use Calibri */
+.inline-input {
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    border-bottom: 1px dashed transparent;
+}
+
+.inline-input:hover {
+    border-bottom-color: #cbd5e1;
+}
+
+.inline-input:focus {
+    border-bottom-color: var(--color-accent);
+}
+
+.report-section {
+    page-break-inside: avoid;
+    margin-bottom: 3rem;
+}
+
+/* Clean List Item - BORDERLESS */
+.item-list-row {
+    display: flex;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.item-thumbnail-box {
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: transparent !important;
+    /* Remove grey bgs */
+}
+
+.item-thumbnail-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.item-text-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    font-size: 11pt;
+}
+
+/* Reference Sub-header styles */
+.section-meta-header {
+    margin-bottom: 1rem;
+}
+
+.blue-separator {
+    border: none;
+    border-top: 1px solid #7ea6da;
+    /* Subtle blue from reference */
+    margin: 0.5rem 0 1rem 0;
+}
+
+/* Remove main image card styles */
+.main-image-container {
+    border: none !important;
+    background-color: transparent !important;
+}
