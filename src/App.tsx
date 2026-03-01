@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Layout } from './components/Layout/Layout';
 import { useReportStore } from './store/useReportStore';
-import { Editor } from './components/Editor/Editor';
 import { Preview } from './components/Preview/Preview';
 
 const SharedReportViewer = () => {
@@ -72,18 +71,7 @@ function AppContent() {
 
   return (
     <Routes>
-      <Route path="/" element={
-        <Layout>
-          <div className="layout-editor">
-            <Editor />
-          </div>
-          <div className="layout-preview-wrapper" onClick={() => useReportStore.getState().setActiveIds(null, null)}>
-            <div onClick={e => e.stopPropagation()}>
-              <Preview />
-            </div>
-          </div>
-        </Layout>
-      } />
+      <Route path="/" element={<Layout />} />
       <Route path="/share/:slug" element={<SharedReportViewer />} />
     </Routes>
   );
