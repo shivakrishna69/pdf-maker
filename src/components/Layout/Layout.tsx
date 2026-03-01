@@ -7,10 +7,13 @@ import { useReportStore, waitForStorageSync } from '../../store/useReportStore';
 import { generateDocx } from '../../utils/exportDocx';
 import { Share, Download, ChevronDown, Save, File, History } from 'lucide-react';
 
-export const Layout: React.FC = () => {
+import { ShareModal } from '../common/ShareModal';
+
+export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     const { report, reportHistory, saveReport, createNewReport, loadReport, deleteReport } = useReportStore();
     const [isDownloadOpen, setIsDownloadOpen] = useState(false);
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+    const [isShareOpen, setIsShareOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [activeTab, setActiveTab] = useState<'Saved' | 'Draft' | 'History'>('Saved');
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -154,7 +157,10 @@ export const Layout: React.FC = () => {
                         <History size={16} /> My Reports
                     </button>
 
-                    <button className="btn btn-outline flex items-center gap-2">
+                    <button
+                        className="btn btn-outline flex items-center gap-2"
+                        onClick={() => setIsShareOpen(true)}
+                    >
                         <Share size={16} /> Share
                     </button>
 
@@ -188,18 +194,26 @@ export const Layout: React.FC = () => {
                 </div>
             </header>
             <main className="layout-main">
-                <aside className="layout-sidebar no-print">
-                    <Sidebar />
-                </aside>
-                <section className="layout-editor no-print">
-                    <Editor />
-                </section>
-                <section className="layout-preview-wrapper" onClick={() => useReportStore.getState().setActiveIds(null, null)}>
-                    <div onClick={e => e.stopPropagation()}>
-                        <Preview />
-                    </div>
-                </section>
+                {children ? children : (
+                    <>
+                        <aside className="layout-sidebar no-print">
+                            <Sidebar />
+                        </aside>
+                        <section className="layout-editor no-print">
+                            <Editor />
+                        </section>
+                        <section className="layout-preview-wrapper" onClick={() => useReportStore.getState().setActiveIds(null, null)}>
+                            <div onClick={e => e.stopPropagation()}>
+                                <Preview />
+                            </div>
+                        </section>
+                    </>
+                )}
             </main>
+
+            {isShareOpen && (
+                <ShareModal onClose={() => setIsShareOpen(false)} />
+            )}
 
             {/* History Modal */}
             {isHistoryOpen && (

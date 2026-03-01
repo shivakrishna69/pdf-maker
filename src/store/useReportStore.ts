@@ -87,7 +87,7 @@ interface ReportState {
     reorderItems: (sectionId: string, startIndex: number, endIndex: number) => void;
 
     resetReport: () => void;
-
+    setReport: (report: Report) => void;
 }
 
 export const useReportStore = create<ReportState>()(
@@ -313,6 +313,7 @@ export const useReportStore = create<ReportState>()(
             })),
 
             resetReport: () => set({ report: createEmptyReport(), activeSectionId: null, activeItemId: null }),
+            setReport: (report) => set({ report, activeSectionId: null, activeItemId: null }),
         }),
         {
             name: 'stock-outage-report-storage',
