@@ -92,7 +92,7 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
         <div className="layout-container">
             <header className="layout-header no-print">
                 <div className="layout-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <img src="/logo-report-default.png" alt="NUTS-PDF" style={{ height: '36px', width: 'auto' }} />
+                    <img src="/logo-report-default.png" alt="NUTS-PDF" style={{ height: '48px', width: 'auto', objectFit: 'contain' }} />
                 </div>
                 <div className="layout-actions">
                     <button
