@@ -46,7 +46,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         return res.status(405).json({ error: 'Method not allowed' });
     } catch (error: any) {
-        console.error('API Error:', error);
-        return res.status(500).json({ error: error.message || 'Internal server error' });
+        console.error('SERVER FATAL ERROR:', error);
+        return res.status(500).json({
+            error: error.message || 'Internal server error',
+            db_defined: !!process.env.DATABASE_URL,
+            stack: error.stack
+        });
     }
 }
