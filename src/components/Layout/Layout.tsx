@@ -114,10 +114,11 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                                     const store = useReportStore.getState();
                                     store.saveAndNewReport('Draft', name || undefined);
 
-                                    console.log('Waiting for IDB sync...');
+                                    // Give the store middleware a tick to start the setItem call
+                                    await new Promise(r => setTimeout(r, 100));
                                     await waitForStorageSync();
-                                    console.log('Ready. Reloading.');
-                                    window.location.reload();
+                                    setIsSaving(false);
+                                    setIsHistoryOpen(true);
                                 })();
                             }
                         }}
@@ -133,14 +134,13 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                             if (name !== null) {
                                 (async () => {
                                     setIsSaving(true);
-                                    console.log('Saving final Report (Atomic):', name);
                                     const store = useReportStore.getState();
                                     store.saveAndNewReport('Saved', name || undefined);
 
-                                    console.log('Waiting for IDB sync...');
+                                    await new Promise(r => setTimeout(r, 100));
                                     await waitForStorageSync();
-                                    console.log('Ready. Reloading.');
-                                    window.location.reload();
+                                    setIsSaving(false);
+                                    setIsHistoryOpen(true);
                                 })();
                             }
                         }}

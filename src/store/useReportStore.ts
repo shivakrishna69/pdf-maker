@@ -4,23 +4,33 @@ import type { StateStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
 import type { Report, ReportSection, ReportItem } from '../types';
 
-// Track pending writes to IndexedDB to ensure we don't reload before sync finishes
-let pendingWrite: Promise<void> | null = null;
-export const waitForStorageSync = () => pendingWrite || Promise.resolve();
+// Track pending writes to IndexedDB
+let activeWrites = 0;
+export const waitForStorageSync = async () => {
+    while (activeWrites > 0) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+    }
+};
 
 const idbStorage: StateStorage = {
     getItem: async (name: string): Promise<string | null> => {
         return (await get(name)) || null;
     },
     setItem: async (name: string, value: string): Promise<void> => {
-        pendingWrite = set(name, value);
-        await pendingWrite;
-        pendingWrite = null;
+        activeWrites++;
+        try {
+            await set(name, value);
+        } finally {
+            activeWrites--;
+        }
     },
     removeItem: async (name: string): Promise<void> => {
-        pendingWrite = del(name);
-        await pendingWrite;
-        pendingWrite = null;
+        activeWrites++;
+        try {
+            await del(name);
+        } finally {
+            activeWrites--;
+        }
     },
 };
 

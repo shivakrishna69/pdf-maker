@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useReportStore } from '../../store/useReportStore';
+import { useReportStore, waitForStorageSync } from '../../store/useReportStore';
 import { X, Copy, Check, Globe, Link as LinkIcon, Loader2 } from 'lucide-react';
 
 interface ShareModalProps {
@@ -44,6 +44,15 @@ export const ShareModal: React.FC<ShareModalProps> = ({ onClose }) => {
 
             const baseUrl = window.location.origin;
             setShareUrl(`${baseUrl}/share/${data.slug}`);
+
+            // Also save to local history so they don't lose it!
+            const store = useReportStore.getState();
+            store.saveReport('Saved');
+            await waitForStorageSync();
+
+            // Use a slight delay before setting loading to false to show success
+            await new Promise(resolve => setTimeout(resolve, 500));
+
         } catch (err: any) {
             setError(err.message);
         } finally {
