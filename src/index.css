@@ -6,15 +6,15 @@
   --color-bg-sidebar: #ffffff;
   --color-bg-panel: #ffffff;
   --color-border: #e2e8f0;
-  
+
   --color-text-primary: #0f172a;
   --color-text-secondary: #64748b;
   --color-text-tertiary: #94a3b8;
-  
+
   --color-accent: #2563eb;
   --color-accent-hover: #1d4ed8;
   --color-accent-transparent: rgba(37, 99, 235, 0.1);
-  
+
   --color-danger: #ef4444;
   --color-danger-hover: #dc2626;
 
@@ -28,9 +28,9 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
-  
+
   --font-sans: 'Inter', sans-serif;
-  
+
   /* A4 Page Dimensions (Print/Preview) */
   --a4-width: 210mm;
   --a4-height: 297mm;
@@ -59,7 +59,9 @@ button {
   background: none;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: inherit;
   font-size: 0.875rem;
 }
@@ -69,13 +71,16 @@ input, textarea, select {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
@@ -84,33 +89,70 @@ input, textarea, select {
 @media print {
   body {
     background-color: white;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
-  
+
   @page {
     size: A4 portrait;
     margin: 0;
   }
-  
+
   /* Utilities to hide UI during print */
   .no-print {
     display: none !important;
   }
-  
+
   .print-only {
     display: block !important;
   }
 }
 
 /* Base utility classes */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.justify-center { justify-content: center; }
-.gap-1 { gap: 0.25rem; }
-.gap-2 { gap: 0.5rem; }
-.gap-3 { gap: 0.75rem; }
-.gap-4 { gap: 1rem; }
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-.hidden { display: none; }
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.hidden {
+  display: none;
+}

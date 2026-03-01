@@ -191,32 +191,25 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                                     stroke={strokeColor}
                                     strokeWidth="0.8"
                                 />
-                                {/* Number - Centered and Minimal */}
-                                <foreignObject
-                                    x={ann.x}
-                                    y={ann.y}
-                                    width={ann.width}
-                                    height={ann.height}
-                                    style={{ overflow: 'visible' }}
+                                {/* Number - Native SVG for perfect print support */}
+                                <circle
+                                    cx={ann.x + ann.width / 2}
+                                    cy={ann.y + ann.height / 2}
+                                    r="2.5"
+                                    fill={strokeColor}
+                                />
+                                <text
+                                    x={ann.x + ann.width / 2}
+                                    y={ann.y + ann.height / 2}
+                                    textAnchor="middle"
+                                    dominantBaseline="central"
+                                    fill="#fff"
+                                    fontSize="3.5"
+                                    fontWeight="bold"
+                                    style={{ pointerEvents: 'none' }}
                                 >
-                                    <div style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        pointerEvents: 'none'
-                                    }}>
-                                        <div style={{
-                                            color: '#fff',
-                                            fontSize: '0.35rem',
-                                            fontWeight: 'bold',
-                                            textShadow: '0 1px 1px rgba(0,0,0,0.6)'
-                                        }}>
-                                            {ann.customMarker || ann.order}
-                                        </div>
-                                    </div>
-                                </foreignObject>
+                                    {ann.customMarker || ann.order}
+                                </text>
                             </g>
                         );
                     })}
