@@ -28,7 +28,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ onClose }) => {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || 'Failed to generate link');
+                throw new Error(`Server Error (${response.status}): ${errorData.error || response.statusText || 'Failed to generate link'}`);
             }
             const data = await response.json();
 
