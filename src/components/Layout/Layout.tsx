@@ -91,8 +91,9 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
     return (
         <div className="layout-container">
             <header className="layout-header no-print">
-                <div className="layout-logo">
-                    <strong>Stock Outage</strong> Report Builder
+                <div className="layout-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <img src="/logo-site.png" alt="NUTS-PDF" style={{ height: '32px', width: 'auto' }} />
+                    <span style={{ fontWeight: 700, fontSize: '1.25rem', color: 'var(--color-primary)' }}>NUTS-PDF</span>
                 </div>
                 <div className="layout-actions">
                     <button
