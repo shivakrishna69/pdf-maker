@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { StateStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
-import type { Report, ReportSection, ReportItem } from '../types';
+import type { Report, ReportSection, ReportItem, Annotation } from '../types';
 
 // Track pending writes to IndexedDB
 let activeWrites = 0;

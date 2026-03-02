@@ -43,13 +43,11 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        // If clicking on an existing annotation area, don't start drawing
         const target = e.target as HTMLElement;
         const isAnnotationArea = target.hasAttribute('data-annotation-id');
         if (isAnnotationArea) return;
 
         if (activeTool !== 'rect') {
-            // If not drawing, check if we clicked outside to deselect
             if (e.target === containerRef.current || e.target === imgRef.current) {
                 setSelectedAnnId(null);
             }
@@ -58,7 +56,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
         setIsDrawing(true);
         const coords = getCoords(e);
         setCurrentRect({ x: coords.x, y: coords.y, w: 0, h: 0 });
-        setSelectedAnnId(null); // Deselect when drawing new
+        setSelectedAnnId(null);
     };
 
     const handleMouseMove = (e: React.MouseEvent | MouseEvent) => {
@@ -75,7 +73,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
         if (!isDrawing || !currentRect) return;
         setIsDrawing(false);
 
-        // Normalize (handle dragging in negative directions)
         const finalRect = {
             x: currentRect.w < 0 ? currentRect.x + currentRect.w : currentRect.x,
             y: currentRect.h < 0 ? currentRect.y + currentRect.h : currentRect.y,
@@ -83,7 +80,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
             h: Math.abs(currentRect.h)
         };
 
-        // Ignore tiny clicks, otherwise show color picker
         if (finalRect.w > 1 && finalRect.h > 1) {
             setPendingAnnotation(finalRect);
         }
@@ -106,20 +102,19 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
         };
         updateSection(sectionId, { annotations: [...annotations, newAnnotation] });
         setPendingAnnotation(null);
-        setSelectedAnnId(newAnnotation.id); // Select the new one immediately
+        setSelectedAnnId(newAnnotation.id);
     };
 
     const removeAnnotation = (id: string) => {
         const newAnns = annotations
             .filter(a => a.id !== id)
-            .map((a, i) => ({ ...a, order: i + 1 })); // Re-order numbers
+            .map((a, i) => ({ ...a, order: i + 1 }));
         updateSection(sectionId, { annotations: newAnns });
         if (selectedAnnId === id) setSelectedAnnId(null);
     };
 
     return (
         <div style={{ position: 'relative', width: '100%', userSelect: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }} ref={containerRef}>
-            {/* Toolbar - Moved outside/above image */}
             <div style={{
                 display: 'flex', gap: '1rem', alignItems: 'center',
                 padding: '0.5rem', background: '#f8fafc', borderRadius: 'var(--radius-md)',
@@ -165,14 +160,13 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                 </div>
             </div>
 
-            {/* Drawing Area */}
             <div
                 style={{
                     position: 'relative', width: '100%',
                     cursor: activeTool === 'rect' ? 'crosshair' : 'default',
                     overflow: 'visible', borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--color-border)',
-                    backgroundColor: '#000' // Dark bg for contrast
+                    backgroundColor: '#000'
                 }}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
@@ -186,7 +180,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                     style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none', borderRadius: 'calc(var(--radius-md) - 1px)' }}
                 />
 
-                {/* SVG Overlay for Annotations */}
                 <svg
                     style={{
                         position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
@@ -214,7 +207,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                                     stroke={strokeColor}
                                     strokeWidth={isSelected ? '1.2' : '0.8'}
                                 />
-                                {/* Number */}
                                 <circle
                                     cx={ann.x + ann.width / 2}
                                     cy={ann.y + ann.height / 2}
@@ -237,7 +229,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                         );
                     })}
 
-                    {/* Active Drawing Preview */}
                     {currentRect && (
                         <rect
                             x={currentRect.w < 0 ? currentRect.x + currentRect.w : currentRect.x}
@@ -252,12 +243,8 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                     )}
                 </svg>
 
-                {/* Interactive UI Layers */}
                 {annotations.map((ann) => {
-                    const isNearRightEdge = (ann.x + ann.width) > 85;
-                    const isNearTopEdge = ann.y < 10;
                     const isSelected = selectedAnnId === ann.id;
-
                     return (
                         <div
                             key={ann.id}
@@ -276,12 +263,10 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                                 cursor: 'pointer',
                                 zIndex: isSelected ? 30 : 20
                             }}
-                        >
-                        </div>
+                        />
                     );
                 })}
 
-                {/* Color Picker Popup for NEW annotations */}
                 {pendingAnnotation && (
                     <div style={{
                         position: 'absolute',
@@ -322,7 +307,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                 )}
             </div>
 
-            {/* EXTERNAL SETTINGS PANEL */}
             {selectedAnnId && (
                 <div style={{
                     padding: '1rem',
@@ -341,14 +325,13 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                         </h4>
                         <button
                             onClick={() => setSelectedAnnId(null)}
-                            style={{ background: 'none', border: 'none', color: 'var(--color-text-secondary)', cursor: 'pointer' }}
+                            style={{ background: 'none', border: 'none', color: 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
                         >
-                            <Check size={16} /> Done
+                            <Check size={14} /> Done
                         </button>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', alignItems: 'end' }}>
-                        {/* Number Input */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>Marker / Number</label>
                             <input
@@ -371,7 +354,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                             />
                         </div>
 
-                        {/* Color Picker */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>Color</label>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -408,7 +390,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                             </div>
                         </div>
 
-                        {/* Delete Action */}
                         <button
                             onClick={() => removeAnnotation(selectedAnnId)}
                             style={{
@@ -426,8 +407,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                                 fontWeight: 600,
                                 transition: 'all 0.2s'
                             }}
-                            onMouseOver={(e) => e.currentTarget.style.background = '#fecaca'}
-                            onMouseOut={(e) => e.currentTarget.style.background = '#fee2e2'}
                         >
                             <Trash2 size={16} /> Remove
                         </button>
