@@ -38,6 +38,7 @@ export interface ReportSection {
   sectionTitle: string;
   referenceText: string;
   lastAnalysisDatetime: string;
+  slots: number | null;
   mainImage: ImageCropData | null;
   annotations: Annotation[];
   notes: string;

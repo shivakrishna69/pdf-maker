@@ -50,6 +50,7 @@ const createEmptySection = (): ReportSection => ({
     sectionTitle: 'New Category',
     referenceText: '',
     lastAnalysisDatetime: new Date().toISOString().slice(0, 19),
+    slots: null,
     mainImage: null,
     annotations: [],
     notes: '',

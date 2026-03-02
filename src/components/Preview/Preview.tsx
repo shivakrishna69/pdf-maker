@@ -5,6 +5,7 @@ import { InlineInput } from './InlineInput';
 
 export const Preview: React.FC = () => {
     const { report, updateSection, updateItem, setActiveIds } = useReportStore();
+    let pageCounter = 1;
 
     return (
         <div className={`page-a4 template-${report.template.toLowerCase()}`}>
@@ -173,7 +174,7 @@ export const Preview: React.FC = () => {
                                     </h2>
                                     <div className="section-meta-header" style={{ fontSize: '11pt', color: '#000', fontWeight: 400, marginBottom: '0.1rem' }}>
                                         <p style={{ display: 'flex', alignItems: 'baseline', gap: '0.3rem', marginBottom: '0.05rem' }}>
-                                            <span style={{ fontWeight: 600 }}>Reference:</span>
+                                            <span style={{ fontWeight: 600 }}>Référence:</span>
                                             <InlineInput
                                                 style={{ flex: 1 }}
                                                 value={section.referenceText}
@@ -181,7 +182,7 @@ export const Preview: React.FC = () => {
                                             />
                                         </p>
                                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.3rem' }}>
-                                            <span style={{ fontWeight: 600 }}>Last analysis:</span>
+                                            <span style={{ fontWeight: 600 }}>Dernière analyse:</span>
                                             <InlineInput
                                                 style={{ flex: 1 }}
                                                 value={section.lastAnalysisDatetime.replace('T', ' ')}
@@ -199,20 +200,33 @@ export const Preview: React.FC = () => {
                                 </div>
                             </div>
 
+                            {/* Custom Footer for Page 1 */}
+                            <div className="print-footer" style={{ marginTop: 'auto', paddingTop: '2rem', display: 'flex', justifyContent: 'center', position: 'relative', fontSize: '10pt', color: '#666' }}>
+                                <div style={{ textAlign: 'center' }}>Nombre de slots : {section.slots || 0}</div>
+                                <div style={{ position: 'absolute', right: 0 }}>Page {pageCounter++}</div>
+                            </div>
+
                             {/* SUBSEQUENT PAGES: 10 items per page (5 left, 5 right) */}
                             {subsequentPages.map((pageChunk, pageIndex) => {
                                 const leftCol = pageChunk.slice(0, 5);
                                 const rightCol = pageChunk.slice(5, 10);
 
                                 return (
-                                    <div key={pageIndex} style={{ display: 'flex', gap: '3rem', pageBreakBefore: 'always', paddingTop: '2.5rem' }}>
-                                        {/* Left Column: 5 items */}
-                                        <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                                            {leftCol.map((item) => renderItemCard(item, section.id))}
+                                    <div key={pageIndex} className="subsequent-page-wrapper" style={{ display: 'flex', flexDirection: 'column', pageBreakBefore: 'always', height: 'var(--a4-height)', padding: '2.5rem 0' }}>
+                                        <div style={{ display: 'flex', gap: '3rem', flex: 1 }}>
+                                            {/* Left Column: 5 items */}
+                                            <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                                                {leftCol.map((item) => renderItemCard(item, section.id))}
+                                            </div>
+                                            {/* Right Column: 5 items */}
+                                            <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                                                {rightCol.map((item) => renderItemCard(item, section.id))}
+                                            </div>
                                         </div>
-                                        {/* Right Column: 5 items */}
-                                        <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                                            {rightCol.map((item) => renderItemCard(item, section.id))}
+                                        {/* Custom Footer for Subsequent Pages */}
+                                        <div className="print-footer" style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center', position: 'relative', fontSize: '10pt', color: '#666' }}>
+                                            <div style={{ textAlign: 'center' }}>Nombre de slots : {section.slots || 0}</div>
+                                            <div style={{ position: 'absolute', right: 0 }}>Page {pageCounter++}</div>
                                         </div>
                                     </div>
                                 );
