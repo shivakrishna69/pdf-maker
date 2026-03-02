@@ -37,7 +37,7 @@ export const Preview: React.FC = () => {
                             <div style={{ display: 'flex', flexDirection: 'column', fontSize: '11pt', lineHeight: '1.1', flex: 1, minWidth: 0, color: '#000' }}>
                                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.2rem', marginBottom: '0.1rem' }}>
                                     <InlineInput
-                                        style={{ color: '#0000FF', flex: 1, fontWeight: 600, textTransform: 'uppercase' }}
+                                        style={{ color: '#000', flex: 1, fontWeight: 600, textTransform: 'uppercase' }}
                                         value={item.productName || 'Unnamed'}
                                         onValueChange={val => updateItem(sectionId, item.id, { productName: val })}
                                     />
