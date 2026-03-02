@@ -116,7 +116,7 @@ export const generateDocx = async (report: Report) => {
             properties: {
                 page: {
                     size: {
-                        orientation: PageOrientation.LANDSCAPE,
+                        orientation: PageOrientation.PORTRAIT,
                     },
                 },
             },

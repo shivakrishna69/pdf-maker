@@ -31,9 +31,9 @@
 
   --font-sans: 'Inter', sans-serif;
 
-  /* A4 Page Dimensions (Print/Preview) - Landscape */
-  --a4-width: 297mm;
-  --a4-height: 210mm;
+  /* A4 Page Dimensions (Print/Preview) - Portrait */
+  --a4-width: 210mm;
+  --a4-height: 297mm;
   --page-margin: 20mm;
 }
 
@@ -94,7 +94,7 @@ select {
   }
 
   @page {
-    size: A4 landscape;
+    size: A4 portrait;
     margin: 0;
   }
 
