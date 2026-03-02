@@ -39,6 +39,7 @@ const createEmptyItem = (): ReportItem => ({
     smallImage: null,
     productName: '',
     status: 'TOTAL',
+    statusColor: 'default',
     implantations: null,
     idcam: '',
     upc: '',

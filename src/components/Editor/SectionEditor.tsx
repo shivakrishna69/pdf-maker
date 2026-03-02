@@ -35,10 +35,10 @@ export const SectionEditor: React.FC<{ sectionId: string }> = ({ sectionId }) =>
 
             <FormField label="Last Analysis Date & Time">
                 <input
-                    type="datetime-local"
-                    step="1"
+                    type="text"
                     value={section.lastAnalysisDatetime}
                     onChange={(e) => updateSection(sectionId, { lastAnalysisDatetime: e.target.value })}
+                    placeholder="e.g. 26-08-2025 03:58:57 AM"
                     style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
                 />
             </FormField>

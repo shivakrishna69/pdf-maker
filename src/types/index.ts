@@ -26,6 +26,7 @@ export interface ReportItem {
   smallImage: string | null; // Data URL
   productName: string;
   status: ItemStatus;
+  statusColor?: 'red' | 'orange' | 'default';
   customStatus?: string;
   implantations: number | null;
   idcam: string;

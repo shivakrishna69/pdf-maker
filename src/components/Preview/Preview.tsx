@@ -42,7 +42,15 @@ export const Preview: React.FC = () => {
                                         onValueChange={val => updateItem(sectionId, item.id, { productName: val })}
                                     />
                                 </div>
-                                <div style={{ color: item.status === 'PARTIAL' ? '#ed7d31' : item.status === 'OOS' ? '#FF0000' : '#444', textTransform: 'uppercase', fontWeight: 600, fontSize: '10pt' }}>
+                                <div style={{
+                                    color: item.statusColor === 'red' ? '#FF0000' :
+                                        item.statusColor === 'orange' ? '#ed7d31' :
+                                            item.statusColor === 'default' ? '#444' :
+                                                (item.status === 'PARTIAL' ? '#ed7d31' : item.status === 'OOS' ? '#FF0000' : '#444'),
+                                    textTransform: 'uppercase',
+                                    fontWeight: 600,
+                                    fontSize: '10pt'
+                                }}>
                                     {item.status}
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.25rem', marginTop: '0.2rem', color: '#333' }}>
