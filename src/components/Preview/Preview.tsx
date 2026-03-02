@@ -66,13 +66,13 @@ export const Preview: React.FC = () => {
                                     {/* Left Column: Matches Right Side Height */}
                                     <div style={{ flex: '0 0 50%', display: 'flex', flexDirection: 'column' }}>
                                         {section.mainImage?.url ? (
-                                            <div style={{ width: '100%', height: '550px', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                                            <div style={{ width: '100%', height: '600px', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                                                 <img
                                                     src={section.mainImage.url}
                                                     alt="Main Shelf"
                                                     style={{
                                                         width: '100%',
-                                                        height: '550px',
+                                                        height: '600px',
                                                         display: 'block',
                                                         objectFit: 'contain',
                                                         imageRendering: 'crisp-edges'
