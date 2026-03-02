@@ -19,6 +19,29 @@
     image-rendering: crisp-edges;
 }
 
+.report-page {
+    width: var(--a4-width);
+    height: var(--a4-height);
+    padding: 10mm 15mm;
+    overflow: hidden;
+    page-break-after: always;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin: 0 auto 2rem auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.report-section {
+    height: auto;
+    display: block;
+}
+
+@page {
+    margin: 0;
+}
+
 @media print {
     .page-a4 {
         box-shadow: none;
@@ -31,23 +54,8 @@
     }
 
     .report-page {
-        width: 100%;
-        height: var(--a4-height);
-        padding: 10mm 15mm;
-        overflow: hidden;
-        page-break-after: always;
-        position: relative;
-    }
-
-    @page {
         margin: 0;
-    }
-
-    .report-section {
-        height: auto;
-        display: block;
-        gap: 0 !important;
-        margin: 0 !important;
+        box-shadow: none;
     }
 }
 
