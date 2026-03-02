@@ -243,13 +243,13 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                     )}
                 </svg>
 
-                {/* Color Picker Popup */}
+                {/* Color Picker Popup - Bounds Aware */}
                 {pendingAnnotation && (
                     <div style={{
                         position: 'absolute',
-                        left: `${pendingAnnotation.x + (pendingAnnotation.w / 2)}%`,
+                        left: `${Math.max(10, Math.min(90, pendingAnnotation.x + (pendingAnnotation.w / 2)))}%`,
                         top: `${pendingAnnotation.y}%`,
-                        transform: 'translate(-50%, -110%)',
+                        transform: pendingAnnotation.y < 15 ? 'translate(-50%, 15px)' : 'translate(-50%, -110%)',
                         background: '#fff',
                         padding: '6px',
                         borderRadius: '8px',
@@ -283,68 +283,75 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                     </div>
                 )}
 
-                {/* Interactive UI Layers (Labels / Deletion) */}
-                {annotations.map((ann) => (
-                    <div
-                        key={ann.id}
-                        style={{
-                            position: 'absolute',
-                            left: `${ann.x + ann.width}%`,
-                            top: `${ann.y}%`,
-                            transform: 'translateX(8px)',
-                            display: 'flex',
-                            gap: '4px',
-                            zIndex: 5,
-                            pointerEvents: 'auto'
-                        }}
-                    >
-                        {editingLabelId === ann.id ? (
-                            <div style={{
-                                display: 'flex', background: '#fff', borderRadius: '4px', border: `1px solid ${ann.color === 'red' ? '#ef4444' : ann.color === 'green' ? '#22c55e' : ann.color === 'yellow' ? '#f59e0b' : '#0000FF'
-                                    }`, padding: '2px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                            }}>
-                                <input
-                                    autoFocus
-                                    value={ann.customMarker ?? ann.order.toString()}
-                                    onChange={(e) => updateMarker(ann.id, e.target.value)}
-                                    onBlur={() => setEditingLabelId(null)}
-                                    onKeyDown={(e) => e.key === 'Enter' && setEditingLabelId(null)}
-                                    style={{ border: 'none', outline: 'none', fontSize: '0.8rem', padding: '2px 4px', width: '30px', textAlign: 'center', fontWeight: 'bold' }}
-                                />
-                                <button onClick={() => setEditingLabelId(null)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#10b981', display: 'flex', alignItems: 'center', padding: '2px' }}>
-                                    <Check size={14} />
-                                </button>
-                            </div>
-                        ) : (
-                            <>
-                                <div
-                                    onClick={() => setEditingLabelId(ann.id)}
-                                    style={{
-                                        background: 'rgba(255,255,255,0.95)', padding: '5px', borderRadius: '4px',
-                                        cursor: 'text', boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                                        border: '1px solid rgba(0,0,0,0.05)', display: 'flex',
-                                        alignItems: 'center', justifyContent: 'center'
-                                    }}
-                                >
-                                    <div style={{
-                                        width: '12px', height: '12px', borderRadius: '50%',
-                                        background: ann.color === 'red' ? '#ef4444' : ann.color === 'green' ? '#22c55e' : ann.color === 'yellow' ? '#f59e0b' : '#0000FF'
-                                    }} />
+                {/* Interactive UI Layers (Labels / Deletion) - Bounds Aware */}
+                {annotations.map((ann) => {
+                    const isNearRightEdge = (ann.x + ann.width) > 85;
+                    const isNearTopEdge = ann.y < 5;
+
+                    return (
+                        <div
+                            key={ann.id}
+                            style={{
+                                position: 'absolute',
+                                left: isNearRightEdge ? `${ann.x}%` : `${ann.x + ann.width}%`,
+                                top: isNearTopEdge ? `${ann.y + ann.height}%` : `${ann.y}%`,
+                                transform: isNearRightEdge
+                                    ? (isNearTopEdge ? 'translate(0, 8px)' : 'translate(0, -35px)')
+                                    : 'translateX(8px)',
+                                display: 'flex',
+                                gap: '4px',
+                                zIndex: 10,
+                                pointerEvents: 'auto'
+                            }}
+                        >
+                            {editingLabelId === ann.id ? (
+                                <div style={{
+                                    display: 'flex', background: '#fff', borderRadius: '4px', border: `1px solid ${ann.color === 'red' ? '#ef4444' : ann.color === 'green' ? '#22c55e' : ann.color === 'yellow' ? '#f59e0b' : '#0000FF'
+                                        }`, padding: '2px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                                }}>
+                                    <input
+                                        autoFocus
+                                        value={ann.customMarker ?? ann.order.toString()}
+                                        onChange={(e) => updateMarker(ann.id, e.target.value)}
+                                        onBlur={() => setEditingLabelId(null)}
+                                        onKeyDown={(e) => e.key === 'Enter' && setEditingLabelId(null)}
+                                        style={{ border: 'none', outline: 'none', fontSize: '0.8rem', padding: '2px 4px', width: '30px', textAlign: 'center', fontWeight: 'bold' }}
+                                    />
+                                    <button onClick={() => setEditingLabelId(null)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#10b981', display: 'flex', alignItems: 'center', padding: '2px' }}>
+                                        <Check size={14} />
+                                    </button>
                                 </div>
-                                <button
-                                    onClick={() => removeAnnotation(ann.id)}
-                                    style={{
-                                        background: 'rgba(255,255,255,0.95)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)',
-                                        borderRadius: '4px', padding: '4px', cursor: 'pointer', display: 'flex',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)', backdropFilter: 'blur(4px)'
-                                    }}
-                                >
-                                    <Trash2 size={14} />
-                                </button>
-                            </>
-                        )}
-                    </div>
-                ))}
+                            ) : (
+                                <>
+                                    <div
+                                        onClick={() => setEditingLabelId(ann.id)}
+                                        style={{
+                                            background: 'rgba(255,255,255,0.95)', padding: '5px', borderRadius: '4px',
+                                            cursor: 'text', boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                            border: '1px solid rgba(0,0,0,0.05)', display: 'flex',
+                                            alignItems: 'center', justifyContent: 'center'
+                                        }}
+                                    >
+                                        <div style={{
+                                            width: '12px', height: '12px', borderRadius: '50%',
+                                            background: ann.color === 'red' ? '#ef4444' : ann.color === 'green' ? '#22c55e' : ann.color === 'yellow' ? '#f59e0b' : '#0000FF'
+                                        }} />
+                                    </div>
+                                    <button
+                                        onClick={() => removeAnnotation(ann.id)}
+                                        style={{
+                                            background: 'rgba(255,255,255,0.95)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)',
+                                            borderRadius: '4px', padding: '4px', cursor: 'pointer', display: 'flex',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)', backdropFilter: 'blur(4px)'
+                                        }}
+                                    >
+                                        <Trash2 size={14} />
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
 
             <style>{`
