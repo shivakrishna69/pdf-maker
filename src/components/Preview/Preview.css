@@ -117,3 +117,18 @@
     border: none !important;
     background-color: transparent !important;
 }
+
+/* Dual-Language Localization */
+.lang-fr {
+    display: none;
+}
+
+@media print {
+    .lang-en {
+        display: none;
+    }
+
+    .lang-fr {
+        display: inline !important;
+    }
+}

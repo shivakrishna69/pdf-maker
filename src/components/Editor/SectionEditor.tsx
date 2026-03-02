@@ -13,9 +13,9 @@ export const SectionEditor: React.FC<{ sectionId: string }> = ({ sectionId }) =>
 
     return (
         <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1.5rem' }}>Éditeur de section</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1.5rem' }}>Section Editor</h2>
 
-            <FormField label="Titre de la catégorie">
+            <FormField label="Category Title">
                 <input
                     type="text"
                     value={section.sectionTitle}
@@ -24,7 +24,7 @@ export const SectionEditor: React.FC<{ sectionId: string }> = ({ sectionId }) =>
                 />
             </FormField>
 
-            <FormField label="Texte de référence">
+            <FormField label="Reference Text">
                 <input
                     type="text"
                     value={section.referenceText}
@@ -33,7 +33,7 @@ export const SectionEditor: React.FC<{ sectionId: string }> = ({ sectionId }) =>
                 />
             </FormField>
 
-            <FormField label="Date et heure de la dernière analyse">
+            <FormField label="Last Analysis Date & Time">
                 <input
                     type="datetime-local"
                     step="1"
@@ -43,12 +43,12 @@ export const SectionEditor: React.FC<{ sectionId: string }> = ({ sectionId }) =>
                 />
             </FormField>
 
-            <FormField label="Nombre de slots">
+            <FormField label="Number of Slots">
                 <input
                     type="number"
                     value={section.slots || ''}
                     onChange={(e) => updateSection(sectionId, { slots: e.target.value ? parseInt(e.target.value) : null })}
-                    placeholder="Saisir manuellement le nombre de slots"
+                    placeholder="Enter slot count manually"
                     style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
                 />
             </FormField>
@@ -62,26 +62,26 @@ export const SectionEditor: React.FC<{ sectionId: string }> = ({ sectionId }) =>
                 />
             </FormField>
 
-            <FormField label="Image principale">
+            <FormField label="Main Image">
                 {!section.mainImage?.url ? (
                     <ImageUpload
                         value={null}
                         onChange={(val) => updateSection(sectionId, {
                             mainImage: val ? { url: val, fit: 'contain', zoom: 1, offsetX: 0, offsetY: 0, rotation: 0 } : null
                         })}
-                        label="Télécharger l'image principale de la catégorie"
+                        label="Upload main category image"
                     />
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                                <Pencil size={12} /> OUTIL D'ANNOTATION (DESSINER SUR L'IMAGE)
+                                <Pencil size={12} /> ANNOTATION TOOL (DRAW ON IMAGE)
                             </div>
                             <button
                                 onClick={() => updateSection(sectionId, { mainImage: null, annotations: [] })}
                                 style={{ fontSize: '0.75rem', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
                             >
-                                <X size={12} /> Supprimer l'image
+                                <X size={12} /> Remove image
                             </button>
                         </div>
                         <ImageAnnotator sectionId={sectionId} imageUrl={section.mainImage.url} />

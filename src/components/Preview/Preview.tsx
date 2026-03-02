@@ -174,7 +174,10 @@ export const Preview: React.FC = () => {
                                     </h2>
                                     <div className="section-meta-header" style={{ fontSize: '11pt', color: '#000', fontWeight: 400, marginBottom: '0.1rem' }}>
                                         <p style={{ display: 'flex', alignItems: 'baseline', gap: '0.3rem', marginBottom: '0.05rem' }}>
-                                            <span style={{ fontWeight: 600 }}>Référence:</span>
+                                            <span style={{ fontWeight: 600 }}>
+                                                <span className="lang-en">Reference:</span>
+                                                <span className="lang-fr">Référence:</span>
+                                            </span>
                                             <InlineInput
                                                 style={{ flex: 1 }}
                                                 value={section.referenceText}
@@ -182,7 +185,10 @@ export const Preview: React.FC = () => {
                                             />
                                         </p>
                                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.3rem' }}>
-                                            <span style={{ fontWeight: 600 }}>Dernière analyse:</span>
+                                            <span style={{ fontWeight: 600 }}>
+                                                <span className="lang-en">Last Analysis:</span>
+                                                <span className="lang-fr">Dernière analyse:</span>
+                                            </span>
                                             <InlineInput
                                                 style={{ flex: 1 }}
                                                 value={section.lastAnalysisDatetime.replace('T', ' ')}
@@ -202,8 +208,15 @@ export const Preview: React.FC = () => {
 
                             {/* Custom Footer for Page 1 */}
                             <div className="print-footer" style={{ marginTop: 'auto', paddingTop: '2rem', display: 'flex', justifyContent: 'center', position: 'relative', fontSize: '10pt', color: '#666' }}>
-                                <div style={{ textAlign: 'center' }}>Nombre de slots : {section.slots || 0}</div>
-                                <div style={{ position: 'absolute', right: 0 }}>Page {pageCounter++}</div>
+                                <div style={{ textAlign: 'center' }}>
+                                    <span className="lang-en">Number of slots : </span>
+                                    <span className="lang-fr">Nombre de slots : </span>
+                                    {section.slots || 0}
+                                </div>
+                                <div style={{ position: 'absolute', right: 0 }}>
+                                    <span className="lang-en">Page</span>
+                                    <span className="lang-fr">Page</span> {pageCounter++}
+                                </div>
                             </div>
 
                             {/* SUBSEQUENT PAGES: 10 items per page (5 left, 5 right) */}
@@ -225,8 +238,15 @@ export const Preview: React.FC = () => {
                                         </div>
                                         {/* Custom Footer for Subsequent Pages */}
                                         <div className="print-footer" style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center', position: 'relative', fontSize: '10pt', color: '#666' }}>
-                                            <div style={{ textAlign: 'center' }}>Nombre de slots : {section.slots || 0}</div>
-                                            <div style={{ position: 'absolute', right: 0 }}>Page {pageCounter++}</div>
+                                            <div style={{ textAlign: 'center' }}>
+                                                <span className="lang-en">Number of slots : </span>
+                                                <span className="lang-fr">Nombre de slots : </span>
+                                                {section.slots || 0}
+                                            </div>
+                                            <div style={{ position: 'absolute', right: 0 }}>
+                                                <span className="lang-en">Page</span>
+                                                <span className="lang-fr">Page</span> {pageCounter++}
+                                            </div>
                                         </div>
                                     </div>
                                 );

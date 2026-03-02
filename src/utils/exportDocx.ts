@@ -14,7 +14,7 @@ export const generateDocx = async (report: Report) => {
 
         const referencePara = new Paragraph({
             children: [
-                new TextRun({ text: 'Reference: ', bold: true }),
+                new TextRun({ text: 'Référence: ', bold: true }),
                 new TextRun(section.referenceText || 'N/A')
             ],
             spacing: { after: 200 }
@@ -22,7 +22,7 @@ export const generateDocx = async (report: Report) => {
 
         const notesPara = new Paragraph({
             children: [
-                new TextRun({ text: 'Note: ', bold: true }),
+                new TextRun({ text: 'Remarque: ', bold: true }),
                 new TextRun(section.notes || 'N/A')
             ],
             spacing: { after: 200 }
@@ -86,9 +86,9 @@ export const generateDocx = async (report: Report) => {
                         margins: { top: 100, bottom: 100, left: 100, right: 100 },
                         children: [
                             new Paragraph({ children: [new TextRun({ text: item.productName || 'Unnamed item', bold: true })] }),
-                            new Paragraph(`Status: ${item.status === 'Custom' ? item.customStatus : item.status}`),
+                            new Paragraph(`Statut: ${item.status === 'Custom' ? item.customStatus : item.status}`),
                             new Paragraph(`IDCAM: ${item.idcam} | UPC: ${item.upc}`),
-                            new Paragraph(`Notes: ${item.notes}`)
+                            new Paragraph(`Remarques: ${item.notes}`)
                         ]
                     })
                 ]
@@ -116,12 +116,12 @@ export const generateDocx = async (report: Report) => {
             properties: {},
             children: [
                 new Paragraph({
-                    text: report.reportTitle || 'Outage Report',
+                    text: report.reportTitle || 'Rapport de Rupture',
                     heading: HeadingLevel.HEADING_1,
                     spacing: { after: 400 }
                 }),
                 new Paragraph({
-                    text: `Generated on: ${new Date(report.createdAt).toLocaleDateString()}`,
+                    text: `Généré le: ${new Date(report.createdAt).toLocaleDateString()}`,
                     spacing: { after: 600 }
                 }),
                 ...sections

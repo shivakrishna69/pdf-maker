@@ -64,7 +64,7 @@ const createEmptyReport = (): Report => ({
     status: 'Draft',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    logo: '/logo-report-default.png',
+    logo: '/logo-report-v2.png',
     sections: [createEmptySection()],
 });
 

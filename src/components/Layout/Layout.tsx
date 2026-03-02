@@ -92,7 +92,7 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
         <div className="layout-container">
             <header className="layout-header no-print">
                 <div className="layout-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <img src="/logo-report-default.png" alt="NUTS-PDF" style={{ height: '48px', width: 'auto', objectFit: 'contain' }} />
+                    <img src="/logo-report-v2.png" alt="NUTS-PDF" style={{ height: '48px', width: 'auto', objectFit: 'contain' }} />
                 </div>
                 <div className="layout-actions">
                     <button
@@ -100,13 +100,13 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                         onClick={() => createNewReport()}
                         title="Start a new report"
                     >
-                        <File size={16} /> Nouveau Formulaire
+                        <File size={16} /> New Form
                     </button>
                     <button
                         className="btn btn-outline flex items-center gap-2"
                         disabled={isSaving}
                         onClick={() => {
-                            const name = window.prompt('Entrez le nom du projet pour l\'enregistrer comme brouillon :', report.reportTitle !== 'Untitled Report' ? report.reportTitle : 'Mon Brouillon');
+                            const name = window.prompt('Enter project name to save as draft:', report.reportTitle !== 'Untitled Report' ? report.reportTitle : 'My Draft');
                             if (name !== null) {
                                 (async () => {
                                     setIsSaving(true);
@@ -123,14 +123,14 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                             }
                         }}
                     >
-                        <Save size={16} /> Enregistrer Brouillon
+                        <Save size={16} /> Save Draft
                     </button>
                     <button
                         className="btn btn-primary flex items-center gap-2"
                         disabled={isSaving}
                         style={{ backgroundColor: '#10b981', borderColor: '#10b981', color: 'white' }}
                         onClick={() => {
-                            const name = window.prompt('Entrez le nom du projet pour l\'enregistrer :', report.reportTitle !== 'Untitled Report' ? report.reportTitle : 'Rapport Final');
+                            const name = window.prompt('Enter project name to save:', report.reportTitle !== 'Untitled Report' ? report.reportTitle : 'Final Report');
                             if (name !== null) {
                                 (async () => {
                                     setIsSaving(true);
@@ -145,7 +145,7 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                             }
                         }}
                     >
-                        <Save size={16} /> Enregistrer Rapport
+                        <Save size={16} /> Save Report
                     </button>
 
                     <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--color-border)', margin: '0 0.5rem' }} />
@@ -154,19 +154,19 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                         className="btn btn-outline flex items-center gap-2"
                         onClick={() => setIsHistoryOpen(true)}
                     >
-                        <History size={16} /> Mes Rapports
+                        <History size={16} /> My Reports
                     </button>
 
                     <button
                         className="btn btn-outline flex items-center gap-2"
                         onClick={() => setIsShareOpen(true)}
                     >
-                        <Share size={16} /> Partager
+                        <Share size={16} /> Share
                     </button>
 
                     <div style={{ position: 'relative' }} ref={dropdownRef}>
                         <button className="btn btn-secondary flex items-center gap-2" onClick={() => setIsDownloadOpen(!isDownloadOpen)}>
-                            <Download size={16} /> Télécharger <ChevronDown size={16} />
+                            <Download size={16} /> Download <ChevronDown size={16} />
                         </button>
 
                         {isDownloadOpen && (
@@ -220,7 +220,7 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                 <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ backgroundColor: 'var(--color-bg-panel)', width: '90%', maxWidth: '800px', height: '80vh', borderRadius: 'var(--radius-lg)', padding: '2rem', display: 'flex', flexDirection: 'column' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <h2 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Mes Rapports</h2>
+                            <h2 style={{ fontSize: '1.5rem', fontWeight: 600 }}>My Reports</h2>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                 <button
                                     onClick={async () => {
@@ -249,7 +249,7 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                                         paddingBottom: '0.4rem'
                                     }}
                                 >
-                                    {tab === 'History' ? 'Tous / Archivés' : tab === 'Saved' ? 'Enregistrés' : 'Brouillons'}
+                                    {tab === 'History' ? 'All / Archived' : tab === 'Saved' ? 'Saved' : 'Drafts'}
                                 </button>
                             ))}
                         </div>
@@ -283,7 +283,7 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                                                     loadReport(historyItem.id);
                                                     setIsHistoryOpen(false);
                                                 }}>
-                                                    Charger
+                                                    Load
                                                 </button>
                                             )}
                                             {historyItem.status === 'Deleted' && (
@@ -293,7 +293,7 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                                                     saveReport('Draft');
                                                     setIsHistoryOpen(false);
                                                 }}>
-                                                    Restaurer
+                                                    Restore
                                                 </button>
                                             )}
                                             <button className="btn btn-outline" style={{ padding: '0.4rem 0.8rem', color: '#ef4444', borderColor: '#fca5a5' }} onClick={() => {
@@ -325,8 +325,8 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                             to { transform: rotate(360deg); }
                         }
                     `}</style>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Enregistrement de l'historique...</h3>
-                    <p style={{ opacity: 0.8 }}>Synchronisation de la base de données avant rafraîchissement</p>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Saving History...</h3>
+                    <p style={{ opacity: 0.8 }}>Syncing database before refresh</p>
                 </div>
             )}
         </div>

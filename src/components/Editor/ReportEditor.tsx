@@ -15,9 +15,9 @@ export const ReportEditor: React.FC = () => {
 
     return (
         <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1.5rem' }}>Paramètres du rapport</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1.5rem' }}>Report Settings</h2>
 
-            <FormField label="Titre du rapport">
+            <FormField label="Report Title">
                 <input
                     type="text"
                     value={report.reportTitle}
@@ -26,18 +26,18 @@ export const ReportEditor: React.FC = () => {
                 />
             </FormField>
 
-            <FormField label="Style de modèle">
+            <FormField label="Template Style">
                 <select
                     value={report.template}
                     onChange={(e) => updateReport({ template: e.target.value as 'SOP' | 'Minimal' })}
                     style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}
                 >
-                    <option value="SOP">Modèle SOP (Par défaut)</option>
-                    <option value="Minimal">Mise en page minimale</option>
+                    <option value="SOP">SOP Template (Default)</option>
+                    <option value="Minimal">Minimal Layout</option>
                 </select>
             </FormField>
 
-            <FormField label="Créé le">
+            <FormField label="Created Date">
                 <input
                     type="date"
                     value={report.createdAt.split('T')[0]}
@@ -50,7 +50,7 @@ export const ReportEditor: React.FC = () => {
                 <ImageUpload
                     value={report.logo}
                     onChange={(val) => updateReport({ logo: val })}
-                    label="Télécharger le logo du rapport"
+                    label="Upload Report Logo"
                 />
             </FormField>
         </div>

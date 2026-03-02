@@ -13,9 +13,9 @@ export const ItemEditor: React.FC<{ sectionId: string, itemId: string }> = ({ se
 
     return (
         <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1.5rem' }}>Éditeur d'article</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1.5rem' }}>Item Editor</h2>
 
-            <FormField label="Nom du produit">
+            <FormField label="Product Name">
                 <input
                     type="text"
                     value={item.productName}
@@ -52,7 +52,7 @@ export const ItemEditor: React.FC<{ sectionId: string, itemId: string }> = ({ se
                 />
             </FormField>
 
-            <FormField label="Notes complémentaires">
+            <FormField label="Additional Notes">
                 <textarea
                     rows={3}
                     value={item.notes}
@@ -61,11 +61,11 @@ export const ItemEditor: React.FC<{ sectionId: string, itemId: string }> = ({ se
                 />
             </FormField>
 
-            <FormField label="Petite image de l'article">
+            <FormField label="Small Item Image">
                 <ImageUpload
                     value={item.smallImage}
                     onChange={(val) => updateItem(sectionId, itemId, { smallImage: val })}
-                    label="Télécharger la miniature"
+                    label="Upload Thumbnail"
                 />
             </FormField>
         </div>
