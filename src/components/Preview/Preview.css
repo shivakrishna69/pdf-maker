@@ -23,13 +23,22 @@
     .page-a4 {
         box-shadow: none;
         margin: 0;
-        padding: 15mm;
-        /* Apply margin as padding for content */
+        padding: 0;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        display: block;
+    }
+
+    .report-page {
         width: 100%;
         height: var(--a4-height);
+        padding: 15mm;
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        page-break-after: always;
+        position: relative;
     }
 
     @page {

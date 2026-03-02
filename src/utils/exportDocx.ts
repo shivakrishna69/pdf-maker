@@ -1,5 +1,5 @@
 import {
-    Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle, ImageRun
+    Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle, ImageRun, PageOrientation
 } from 'docx';
 import type { Report } from '../types';
 
@@ -113,7 +113,13 @@ export const generateDocx = async (report: Report) => {
 
     const doc = new Document({
         sections: [{
-            properties: {},
+            properties: {
+                page: {
+                    size: {
+                        orientation: PageOrientation.LANDSCAPE,
+                    },
+                },
+            },
             children: [
                 new Paragraph({
                     text: report.reportTitle || 'Rapport de Rupture',

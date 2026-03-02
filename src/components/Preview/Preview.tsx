@@ -58,8 +58,8 @@ export const Preview: React.FC = () => {
 
                     return (
                         <div key={section.id} className="report-section" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            {/* PAGE 1: 50/50 Perfection - Fixed 600px Height */}
-                            <div style={{ display: 'flex', pageBreakInside: 'avoid', gap: '2rem', alignItems: 'stretch' }} onClick={() => setActiveIds(section.id, null)}>
+                            {/* PAGE 1: 50/50 Perfection - New report-page class for print pagination */}
+                            <div className="report-page" style={{ display: 'flex', gap: '2rem', alignItems: 'stretch' }} onClick={() => setActiveIds(section.id, null)}>
                                 {/* Left Column: 600px Height (50%) */}
                                 <div style={{ flex: '0 0 50%', display: 'flex' }}>
                                     {section.mainImage?.url ? (
@@ -225,7 +225,7 @@ export const Preview: React.FC = () => {
                                 const rightCol = pageChunk.slice(5, 10);
 
                                 return (
-                                    <div key={pageIndex} className="subsequent-page-wrapper" style={{ display: 'flex', flexDirection: 'column', pageBreakBefore: 'always', height: 'var(--a4-height)', padding: '2.5rem 0' }}>
+                                    <div key={pageIndex} className="report-page subsequent-page-wrapper" style={{ display: 'flex', flexDirection: 'column' }}>
                                         <div style={{ display: 'flex', gap: '3rem', flex: 1 }}>
                                             {/* Left Column: 5 items */}
                                             <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
