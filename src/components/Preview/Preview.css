@@ -35,10 +35,10 @@
         height: var(--a4-height);
         padding: 15mm;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
         page-break-after: always;
         position: relative;
+        display: flex;
+        flex-direction: column;
     }
 
     @page {
