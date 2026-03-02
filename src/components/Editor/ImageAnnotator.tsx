@@ -149,7 +149,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                 style={{
                     position: 'relative', width: '100%', height: '100%',
                     cursor: activeTool === 'rect' ? 'crosshair' : 'default',
-                    overflow: 'hidden', borderRadius: 'var(--radius-md)',
+                    overflow: 'visible', borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--color-border)'
                 }}
                 onMouseDown={handleMouseDown}
@@ -247,9 +247,9 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                 {pendingAnnotation && (
                     <div style={{
                         position: 'absolute',
-                        left: `${Math.max(10, Math.min(90, pendingAnnotation.x + (pendingAnnotation.w / 2)))}%`,
+                        left: `${Math.max(15, Math.min(85, pendingAnnotation.x + (pendingAnnotation.w / 2)))}%`,
                         top: `${pendingAnnotation.y}%`,
-                        transform: pendingAnnotation.y < 15 ? 'translate(-50%, 15px)' : 'translate(-50%, -110%)',
+                        transform: pendingAnnotation.y < 15 ? 'translate(-50%, 15px)' : 'translate(-50%, -120%)',
                         background: '#fff',
                         padding: '6px',
                         borderRadius: '8px',
@@ -285,7 +285,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
 
                 {/* Interactive UI Layers (Labels / Deletion) - Bounds Aware */}
                 {annotations.map((ann) => {
-                    const isNearRightEdge = (ann.x + ann.width) > 85;
+                    const isNearRightEdge = (ann.x + ann.width) > 80;
                     const isNearTopEdge = ann.y < 5;
 
                     return (
