@@ -33,12 +33,10 @@
     .report-page {
         width: 100%;
         height: var(--a4-height);
-        padding: 15mm;
+        padding: 10mm 15mm;
         overflow: hidden;
         page-break-after: always;
         position: relative;
-        display: flex;
-        flex-direction: column;
     }
 
     @page {
