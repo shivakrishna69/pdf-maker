@@ -46,7 +46,8 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                 s.items.length > 1 ||
                 s.items[0]?.productName !== '' ||
                 s.mainImage !== null
-            ) || currentReport.reportTitle !== 'Untitled Report' || currentReport.logo !== null;
+            ) || currentReport.reportTitle !== 'Untitled Report' ||
+                (currentReport.logo !== null && currentReport.logo !== '/logo-report-v2.png');
 
             const wasJustAutoDrafted = sessionStorage.getItem('auto_drafted_on_refresh');
 

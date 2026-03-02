@@ -359,8 +359,24 @@ export const useReportStore = create<ReportState>()(
                         headers: { 'x-user-id': userId }
                     });
                     if (response.ok) {
-                        const history = await response.json();
-                        set({ reportHistory: history });
+                        const cloudHistory = await response.json() as Report[];
+                        const localHistory = useReportStore.getState().reportHistory;
+
+                        // Merge logic: Prioritize newer updatedAt, keep uniqueness by id
+                        const mergedHistory = [...localHistory];
+                        cloudHistory.forEach(cloudReport => {
+                            const localIndex = mergedHistory.findIndex(r => r.id === cloudReport.id);
+                            if (localIndex === -1) {
+                                mergedHistory.push(cloudReport);
+                            } else {
+                                const localReport = mergedHistory[localIndex];
+                                if (new Date(cloudReport.updatedAt) > new Date(localReport.updatedAt)) {
+                                    mergedHistory[localIndex] = cloudReport;
+                                }
+                            }
+                        });
+
+                        set({ reportHistory: mergedHistory });
                     }
                 } catch (error) {
                     console.error('Failed to fetch user reports:', error);
