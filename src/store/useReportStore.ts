@@ -105,7 +105,7 @@ interface ReportState {
     setReport: (report: Report) => void;
     fetchUserReports: () => Promise<void>;
     saveToCloud: (report: Report) => Promise<void>;
-    updateAnnotationMarker: (sectionId: string, annotationId: string, marker: string) => void;
+    updateAnnotation: (sectionId: string, annotationId: string, data: Partial<Annotation>) => void;
 }
 
 export const useReportStore = create<ReportState>()(
@@ -402,7 +402,7 @@ export const useReportStore = create<ReportState>()(
                 }
             },
 
-            updateAnnotationMarker: (sectionId, annotationId, marker) => set((state) => {
+            updateAnnotation: (sectionId, annotationId, data) => set((state) => {
                 const now = new Date().toISOString();
                 return {
                     report: {
@@ -412,7 +412,7 @@ export const useReportStore = create<ReportState>()(
                             sec.id === sectionId ? {
                                 ...sec,
                                 annotations: sec.annotations.map(ann =>
-                                    ann.id === annotationId ? { ...ann, customMarker: marker } : ann
+                                    ann.id === annotationId ? { ...ann, ...data } : ann
                                 )
                             } : sec
                         )

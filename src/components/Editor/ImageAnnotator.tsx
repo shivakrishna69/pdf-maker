@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Pencil, Square, Trash2, Check } from 'lucide-react';
 import { useReportStore } from '../../store/useReportStore';
 import type { Annotation } from '../../types';
@@ -19,8 +19,16 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
     const [currentRect, setCurrentRect] = useState<{ x: number, y: number, w: number, h: number } | null>(null);
     const [pendingAnnotation, setPendingAnnotation] = useState<{ x: number, y: number, w: number, h: number } | null>(null);
     const [selectedAnnId, setSelectedAnnId] = useState<string | null>(null);
-    const [editingLabelId, setEditingLabelId] = useState<string | null>(null);
     const [tempMarker, setTempMarker] = useState<string>('');
+
+    useEffect(() => {
+        if (selectedAnnId) {
+            const ann = annotations.find(a => a.id === selectedAnnId);
+            if (ann) setTempMarker(ann.customMarker ?? ann.order.toString());
+        } else {
+            setTempMarker('');
+        }
+    }, [selectedAnnId, annotations]);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const imgRef = useRef<HTMLImageElement>(null);
@@ -269,96 +277,11 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                                 zIndex: isSelected ? 30 : 20
                             }}
                         >
-                            {/* The actual control icons - Shown only when SELECTED */}
-                            <div style={{
-                                position: 'absolute',
-                                left: isNearRightEdge ? '0' : '100%',
-                                top: isNearTopEdge ? '100%' : '0',
-                                transform: isNearRightEdge
-                                    ? (isNearTopEdge ? 'translate(0, 4px)' : 'translate(0, -32px)')
-                                    : 'translateX(4px)', // Reduced gap to 4px
-                                display: 'flex',
-                                gap: '4px',
-                                opacity: isSelected ? 1 : 0,
-                                transition: 'opacity 0.15s ease-out',
-                                pointerEvents: isSelected ? 'auto' : 'none',
-                                whiteSpace: 'nowrap'
-                            }}>
-                                {editingLabelId === ann.id ? (
-                                    <div style={{
-                                        display: 'flex', background: '#fff', borderRadius: '4px', border: `2px solid ${ann.color === 'red' ? '#ef4444' : ann.color === 'green' ? '#22c55e' : ann.color === 'yellow' ? '#f59e0b' : '#0000FF'
-                                            }`, padding: '2px', boxShadow: 'var(--shadow-lg)'
-                                    }}>
-                                        <input
-                                            autoFocus
-                                            value={tempMarker}
-                                            onChange={(e) => setTempMarker(e.target.value)}
-                                            onBlur={() => {
-                                                const { updateAnnotationMarker } = useReportStore.getState();
-                                                updateAnnotationMarker(sectionId, ann.id, tempMarker);
-                                                setEditingLabelId(null);
-                                            }}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    const { updateAnnotationMarker } = useReportStore.getState();
-                                                    updateAnnotationMarker(sectionId, ann.id, tempMarker);
-                                                    setEditingLabelId(null);
-                                                }
-                                            }}
-                                            onClick={e => e.stopPropagation()}
-                                            style={{ border: 'none', outline: 'none', fontSize: '0.85rem', padding: '2px 4px', width: '35px', textAlign: 'center', fontWeight: 'bold' }}
-                                        />
-                                        <button onClick={(e) => {
-                                            e.stopPropagation();
-                                            const { updateAnnotationMarker } = useReportStore.getState();
-                                            updateAnnotationMarker(sectionId, ann.id, tempMarker);
-                                            setEditingLabelId(null);
-                                        }} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#10b981', display: 'flex', alignItems: 'center', padding: '2px' }}>
-                                            <Check size={16} />
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setTempMarker(ann.customMarker ?? ann.order.toString());
-                                                setEditingLabelId(ann.id);
-                                            }}
-                                            style={{
-                                                background: '#fff', padding: '4px 8px', borderRadius: '4px',
-                                                cursor: 'pointer', boxShadow: 'var(--shadow-md)',
-                                                border: `1.5px solid ${ann.color === 'red' ? '#ef4444' : ann.color === 'green' ? '#22c55e' : ann.color === 'yellow' ? '#f59e0b' : '#0000FF'}`,
-                                                display: 'flex', alignItems: 'center', gap: '6px',
-                                                fontWeight: 'bold', fontSize: '0.85rem', color: '#1e293b'
-                                            }}
-                                            title="Edit Number"
-                                        >
-                                            <div style={{
-                                                width: '10px', height: '10px', borderRadius: '50%',
-                                                background: ann.color === 'red' ? '#ef4444' : ann.color === 'green' ? '#22c55e' : ann.color === 'yellow' ? '#f59e0b' : '#0000FF'
-                                            }} />
-                                            <span>{ann.customMarker || ann.order}</span>
-                                        </div>
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); removeAnnotation(ann.id); }}
-                                            style={{
-                                                background: '#fff', color: '#ef4444', border: '1px solid #fee2e2',
-                                                borderRadius: '4px', padding: '6px', cursor: 'pointer', display: 'flex',
-                                                boxShadow: 'var(--shadow-md)'
-                                            }}
-                                            title="Delete"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </>
-                                )}
-                            </div>
                         </div>
                     );
                 })}
 
-                {/* Color Picker Popup - Bounds Aware */}
+                {/* Color Picker Popup for NEW annotations */}
                 {pendingAnnotation && (
                     <div style={{
                         position: 'absolute',
@@ -366,7 +289,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                         top: `${pendingAnnotation.y}%`,
                         transform: pendingAnnotation.y < 15 ? 'translate(-50%, 15px)' : 'translate(-50%, -120%)',
                         background: '#fff',
-                        padding: '8px',
+                        padding: '10px',
                         borderRadius: '12px',
                         display: 'flex',
                         gap: '8px',
@@ -385,7 +308,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                                 key={c.id}
                                 onClick={(e) => { e.stopPropagation(); addAnnotationWithColor(c.id as any); }}
                                 style={{
-                                    width: '24px', height: '24px', borderRadius: '50%',
+                                    width: '28px', height: '28px', borderRadius: '50%',
                                     background: c.color, border: 'none', cursor: 'pointer',
                                     boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                                     transition: 'transform 0.15s'
@@ -398,6 +321,119 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                     </div>
                 )}
             </div>
+
+            {/* EXTERNAL SETTINGS PANEL */}
+            {selectedAnnId && (
+                <div style={{
+                    padding: '1rem',
+                    background: '#fff',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--color-border)',
+                    boxShadow: 'var(--shadow-sm)',
+                    animation: 'fadeIn 0.2s ease-out',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem'
+                }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text)' }}>
+                            Selected Annotation Settings
+                        </h4>
+                        <button
+                            onClick={() => setSelectedAnnId(null)}
+                            style={{ background: 'none', border: 'none', color: 'var(--color-text-secondary)', cursor: 'pointer' }}
+                        >
+                            <Check size={16} /> Done
+                        </button>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', alignItems: 'end' }}>
+                        {/* Number Input */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>Marker / Number</label>
+                            <input
+                                type="text"
+                                value={tempMarker}
+                                onChange={(e) => {
+                                    setTempMarker(e.target.value);
+                                    const { updateAnnotation } = useReportStore.getState();
+                                    updateAnnotation(sectionId, selectedAnnId, { customMarker: e.target.value });
+                                }}
+                                style={{
+                                    padding: '0.5rem',
+                                    borderRadius: '4px',
+                                    border: '1px solid var(--color-border)',
+                                    fontSize: '0.875rem',
+                                    fontWeight: 'bold',
+                                    outline: 'none',
+                                    width: '100%'
+                                }}
+                            />
+                        </div>
+
+                        {/* Color Picker */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>Color</label>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                {[
+                                    { id: 'red', color: '#ef4444' },
+                                    { id: 'green', color: '#22c55e' },
+                                    { id: 'blue', color: '#0000FF' },
+                                    { id: 'yellow', color: '#f59e0b' }
+                                ].map(c => {
+                                    const ann = annotations.find(a => a.id === selectedAnnId);
+                                    const isCurrent = ann?.color === c.id;
+                                    return (
+                                        <button
+                                            key={c.id}
+                                            onClick={() => {
+                                                const { updateAnnotation } = useReportStore.getState();
+                                                updateAnnotation(sectionId, selectedAnnId, { color: c.id as any });
+                                            }}
+                                            style={{
+                                                width: '28px',
+                                                height: '28px',
+                                                borderRadius: '50%',
+                                                background: c.color,
+                                                border: isCurrent ? '2px solid #000' : '2px solid transparent',
+                                                cursor: 'pointer',
+                                                boxShadow: isCurrent ? '0 0 0 2px #fff' : 'none',
+                                                transform: isCurrent ? 'scale(1.1)' : 'scale(1)',
+                                                transition: 'all 0.1s'
+                                            }}
+                                            title={c.id}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Delete Action */}
+                        <button
+                            onClick={() => removeAnnotation(selectedAnnId)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                                padding: '0.5rem 1rem',
+                                background: '#fee2e2',
+                                color: '#ef4444',
+                                border: '1px solid #fecaca',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '0.875rem',
+                                fontWeight: 600,
+                                transition: 'all 0.2s'
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.background = '#fecaca'}
+                            onMouseOut={(e) => e.currentTarget.style.background = '#fee2e2'}
+                        >
+                            <Trash2 size={16} /> Remove
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <style>{`
                 @keyframes fadeIn {
