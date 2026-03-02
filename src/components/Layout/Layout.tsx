@@ -6,11 +6,20 @@ import { Preview } from '../Preview/Preview';
 import { useReportStore, waitForStorageSync } from '../../store/useReportStore';
 import { generateDocx } from '../../utils/exportDocx';
 import { Share, Download, ChevronDown, Save, File, History } from 'lucide-react';
+import { UserButton, useAuth } from '@clerk/clerk-react';
 
 import { ShareModal } from '../common/ShareModal';
 
 export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-    const { report, reportHistory, saveReport, createNewReport, loadReport, deleteReport } = useReportStore();
+    const { userId: clerkUserId } = useAuth();
+    const { report, reportHistory, saveReport, createNewReport, loadReport, deleteReport, setUserId, fetchUserReports } = useReportStore();
+
+    useEffect(() => {
+        setUserId(clerkUserId || null);
+        if (clerkUserId) {
+            fetchUserReports();
+        }
+    }, [clerkUserId, setUserId, fetchUserReports]);
     const [isDownloadOpen, setIsDownloadOpen] = useState(false);
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     const [isShareOpen, setIsShareOpen] = useState(false);
@@ -190,6 +199,12 @@ export const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                                 </button>
                             </div>
                         )}
+                    </div>
+
+                    <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--color-border)', margin: '0 0.5rem' }} />
+
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <UserButton afterSignOutUrl="/" />
                     </div>
                 </div>
             </header>

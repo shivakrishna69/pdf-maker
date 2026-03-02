@@ -48,6 +48,7 @@ export interface ReportSection {
 
 export interface Report {
   id: string;
+  userId?: string;
   reportTitle: string;
   template: 'SOP' | 'Minimal';
   status: 'Draft' | 'Saved' | 'Deleted';

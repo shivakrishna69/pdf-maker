@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { SignedIn, SignedOut, SignIn, SignUp } from '@clerk/clerk-react';
 import { Layout } from './components/Layout/Layout';
 import { useReportStore } from './store/useReportStore';
 import { Preview } from './components/Preview/Preview';
@@ -71,8 +72,35 @@ function AppContent() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout />} />
+      {/* Auth Routes */}
+      <Route path="/sign-in/*" element={
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f3f4f6' }}>
+          <SignIn routing="path" path="/sign-in" signUpUrl="/sign-up" />
+        </div>
+      } />
+      <Route path="/sign-up/*" element={
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f3f4f6' }}>
+          <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" />
+        </div>
+      } />
+
+      {/* Main App Route - Protected */}
+      <Route path="/" element={
+        <>
+          <SignedIn>
+            <Layout />
+          </SignedIn>
+          <SignedOut>
+            <Navigate to="/sign-in" replace />
+          </SignedOut>
+        </>
+      } />
+
+      {/* Shared Viewer - Public */}
       <Route path="/share/:slug" element={<SharedReportViewer />} />
+
+      {/* Catch-all */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

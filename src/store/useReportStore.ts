@@ -58,8 +58,9 @@ const createEmptySection = (): ReportSection => ({
     items: [createEmptyItem()],
 });
 
-const createEmptyReport = (): Report => ({
+const createEmptyReport = (userId?: string | null): Report => ({
     id: crypto.randomUUID(),
+    userId: userId || undefined,
     reportTitle: 'Untitled Report',
     template: 'SOP',
     status: 'Draft',
@@ -72,10 +73,12 @@ const createEmptyReport = (): Report => ({
 interface ReportState {
     report: Report;
     reportHistory: Report[];
+    userId: string | null;
     activeSectionId: string | null;
     activeItemId: string | null;
 
     // Actions
+    setUserId: (userId: string | null) => void;
     setActiveIds: (sectionId: string | null, itemId: string | null) => void;
     updateReport: (data: Partial<Omit<Report, 'sections' | 'id'>>) => void;
 
@@ -100,6 +103,8 @@ interface ReportState {
 
     resetReport: () => void;
     setReport: (report: Report) => void;
+    fetchUserReports: () => Promise<void>;
+    saveToCloud: (report: Report) => Promise<void>;
 }
 
 export const useReportStore = create<ReportState>()(
@@ -107,9 +112,11 @@ export const useReportStore = create<ReportState>()(
         (set) => ({
             report: createEmptyReport(),
             reportHistory: [],
+            userId: null,
             activeSectionId: null,
             activeItemId: null,
 
+            setUserId: (userId) => set({ userId }),
             setActiveIds: (sectionId, itemId) => set({ activeSectionId: sectionId, activeItemId: itemId }),
 
             updateReport: (data) => set((state) => {
@@ -138,6 +145,9 @@ export const useReportStore = create<ReportState>()(
                     newHistory.push(finalizedReport);
                 }
 
+                // Push to cloud asynchronously
+                state.saveToCloud(finalizedReport);
+
                 return {
                     report: finalizedReport,
                     reportHistory: newHistory
@@ -161,10 +171,13 @@ export const useReportStore = create<ReportState>()(
                     newHistory.push(reportToSave);
                 }
 
+                // Push to cloud asynchronously
+                state.saveToCloud(reportToSave);
+
                 console.log(`[Store] Atomic Save and New: ${status}. History size: ${newHistory.length}`);
 
                 return {
-                    report: createEmptyReport(),
+                    report: createEmptyReport(state.userId),
                     reportHistory: newHistory,
                     activeSectionId: null,
                     activeItemId: null
@@ -185,16 +198,26 @@ export const useReportStore = create<ReportState>()(
                     newHistory = newHistory.map(r => r.id === reportId ? { ...r, status: 'Deleted' as const } : r);
                 }
 
+                // Push deletion to cloud if logged in
+                const storeState = useReportStore.getState();
+                const userId = storeState.userId;
+                if (userId) {
+                    fetch(`/api/reports?id=${reportId}`, {
+                        method: 'DELETE',
+                        headers: { 'x-user-id': userId }
+                    }).catch(err => console.error('Failed to sync deletion:', err));
+                }
+
                 return {
                     reportHistory: newHistory,
                     // If they deleted the currently active report, clear the canvas
-                    report: state.report.id === reportId ? createEmptyReport() : state.report
+                    report: state.report.id === reportId ? createEmptyReport(state.userId) : state.report
                 };
             }),
 
-            createNewReport: () => set(() => {
+            createNewReport: () => set((state) => {
                 return {
-                    report: createEmptyReport(),
+                    report: createEmptyReport(state.userId),
                     activeSectionId: null,
                     activeItemId: null
                 };
@@ -324,8 +347,43 @@ export const useReportStore = create<ReportState>()(
                 }
             })),
 
-            resetReport: () => set({ report: createEmptyReport(), activeSectionId: null, activeItemId: null }),
+            resetReport: () => set((state) => ({ report: createEmptyReport(state.userId), activeSectionId: null, activeItemId: null })),
             setReport: (report) => set({ report, activeSectionId: null, activeItemId: null }),
+
+            fetchUserReports: async () => {
+                const { userId } = useReportStore.getState();
+                if (!userId) return;
+
+                try {
+                    const response = await fetch('/api/reports', {
+                        headers: { 'x-user-id': userId }
+                    });
+                    if (response.ok) {
+                        const history = await response.json();
+                        set({ reportHistory: history });
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch user reports:', error);
+                }
+            },
+
+            saveToCloud: async (report) => {
+                const { userId } = useReportStore.getState();
+                if (!userId) return;
+
+                try {
+                    await fetch('/api/reports', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-user-id': userId
+                        },
+                        body: JSON.stringify(report)
+                    });
+                } catch (error) {
+                    console.error('Failed to save report to cloud:', error);
+                }
+            },
         }),
         {
             name: 'stock-outage-report-storage',
