@@ -12,7 +12,7 @@ export const Preview: React.FC = () => {
 
             {/* Sections rendering */}
             {/* Sections rendering - Reduced gap for cleaner layout */}
-            <div className="report-sections-container" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <div className="report-sections-container">
                 {report.sections.map((section) => {
                     const firstPageItems = section.items.slice(0, 5);
                     const remainingItems = section.items.slice(5);
@@ -58,7 +58,7 @@ export const Preview: React.FC = () => {
                     );
 
                     return (
-                        <div key={section.id} className="report-section" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div key={section.id} className="report-section">
                             {/* PAGE 1 Wrapper */}
                             <div className="report-page" onClick={() => setActiveIds(section.id, null)} style={{ position: 'relative' }}>
                                 {/* Content Area */}
@@ -133,28 +133,28 @@ export const Preview: React.FC = () => {
                                     bottom: '10mm',
                                     left: '15mm',
                                     right: '15mm',
+                                    height: '10mm',
                                     display: 'flex',
                                     justifyContent: 'center',
-                                    alignItems: 'baseline',
+                                    alignItems: 'center',
                                     fontSize: '10pt',
                                     color: '#666',
-                                    zIndex: 10
+                                    zIndex: 100
                                 }}>
-                                    <div style={{ textAlign: 'center' }}>
+                                    <div style={{ textAlign: 'center', flex: 1 }}>
                                         <span className="lang-en">Number of slots : {section.slots || 0}</span>
                                         <span className="lang-fr">Nombre de slots : {section.slots || 0}</span>
                                     </div>
                                     <div style={{ position: 'absolute', right: 0 }}>
-                                        <span className="lang-en">Page {pageCounter % 2 === 0 ? pageCounter : pageCounter}</span>
-                                        <span className="lang-fr">Page {pageCounter++}</span>
+                                        <span>Page {pageCounter++}</span>
                                     </div>
                                 </div>
-                                泛                            </div>
+                            </div>
 
                             {/* SUBSEQUENT PAGES */}
                             {subsequentPages.map((pageChunk, pageIndex) => (
-                                <div key={pageIndex} className="report-page subsequent-page-wrapper" style={{ position: 'relative' }}>
-                                    <div style={{ display: 'flex', gap: '3rem' }}>
+                                <div key={pageIndex} className="report-page subsequent-page-wrapper">
+                                    <div style={{ display: 'flex', gap: '3rem', flex: 1 }}>
                                         <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                                             {pageChunk.slice(0, 5).map((item) => renderItemCard(item, section.id))}
                                         </div>
@@ -162,25 +162,26 @@ export const Preview: React.FC = () => {
                                             {pageChunk.slice(5, 10).map((item) => renderItemCard(item, section.id))}
                                         </div>
                                     </div>
+                                    {/* Footer Subsequent Pages */}
                                     <div className="print-footer" style={{
                                         position: 'absolute',
                                         bottom: '10mm',
                                         left: '15mm',
                                         right: '15mm',
+                                        height: '10mm',
                                         display: 'flex',
                                         justifyContent: 'center',
-                                        alignItems: 'baseline',
+                                        alignItems: 'center',
                                         fontSize: '10pt',
                                         color: '#666',
-                                        zIndex: 10
+                                        zIndex: 100
                                     }}>
-                                        <div style={{ textAlign: 'center' }}>
+                                        <div style={{ textAlign: 'center', flex: 1 }}>
                                             <span className="lang-en">Number of slots : {section.slots || 0}</span>
                                             <span className="lang-fr">Nombre de slots : {section.slots || 0}</span>
                                         </div>
                                         <div style={{ position: 'absolute', right: 0 }}>
-                                            <span className="lang-en">Page {pageCounter}</span>
-                                            <span className="lang-fr">Page {pageCounter++}</span>
+                                            <span>Page {pageCounter++}</span>
                                         </div>
                                     </div>
                                 </div>

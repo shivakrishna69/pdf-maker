@@ -5,57 +5,82 @@
 }
 
 .page-a4 {
-    width: var(--a4-width);
-    min-height: var(--a4-height);
-    background-color: white;
-    box-shadow: var(--shadow-lg);
-    padding: var(--page-margin);
     position: relative;
     font-family: 'Calibri', 'Inter', sans-serif;
     color: #000;
-
-    /* Ensure small thumbnails stay sharp */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
+    margin: 0;
+    padding: 0;
 }
 
 .report-page {
+    box-sizing: border-box;
+    /* CRITICAL for A4 dimensions */
     width: var(--a4-width);
-    height: var(--a4-height);
+    height: 209.8mm;
+    /* Safety buffer to prevent rounding overflow */
     padding: 10mm 15mm;
     overflow: hidden;
-    page-break-after: always;
     position: relative;
     display: flex;
     flex-direction: column;
     background-color: white;
     margin: 0 auto 2rem auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.report-page * {
+    box-sizing: border-box;
+}
+
+.report-sections-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .report-section {
-    height: auto;
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 @page {
+    size: A4 landscape;
     margin: 0;
 }
 
 @media print {
     .page-a4 {
-        box-shadow: none;
         margin: 0;
         padding: 0;
-        width: 100%;
-        height: auto;
-        overflow: visible;
-        display: block;
+    }
+
+    .report-sections-container {
+        display: block !important;
+        gap: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .report-page {
-        margin: 0;
-        box-shadow: none;
+        margin: 0 !important;
+        box-shadow: none !important;
+        break-after: page;
+        /* Modern paged break */
+        page-break-after: always;
+        /* Single point of truth for breaking */
+        border: none;
+        height: 209.8mm !important;
+    }
+
+    .report-page:last-child {
+        break-after: auto !important;
+        page-break-after: auto !important;
+    }
+
+    .report-section {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 }
 
