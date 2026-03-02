@@ -62,18 +62,19 @@ export const Preview: React.FC = () => {
                             {/* PAGE 1 Wrapper */}
                             <div className="report-page" onClick={() => setActiveIds(section.id, null)}>
                                 {/* Original 50/50 Layout: Image Left, List Right */}
-                                <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-                                    {/* Left Column: Variable Height (50%) - Matches Right Side */}
-                                    <div style={{ flex: '0 0 50%', display: 'flex' }}>
+                                <div style={{ display: 'flex', gap: '2rem', alignItems: 'stretch' }}>
+                                    {/* Left Column: Matches Right Side Height */}
+                                    <div style={{ flex: '0 0 50%', display: 'flex', flexDirection: 'column' }}>
                                         {section.mainImage?.url ? (
-                                            <div style={{ width: '100%', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                                            <div style={{ width: '100%', height: '550px', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                                                 <img
                                                     src={section.mainImage.url}
                                                     alt="Main Shelf"
                                                     style={{
                                                         width: '100%',
-                                                        height: 'auto',
+                                                        height: '550px',
                                                         display: 'block',
+                                                        objectFit: 'contain',
                                                         imageRendering: 'crisp-edges'
                                                     }}
                                                 />
@@ -202,8 +203,8 @@ export const Preview: React.FC = () => {
 
                                         <div className="blue-separator" style={{ margin: '0.3rem 0 0.5rem 0' }} />
 
-                                        {/* Items List (First 5) - Tightened items to prevent layout overflow */}
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', justifyContent: 'flex-start' }}>
+                                        {/* Items List (First 5) - Balanced spacing to match image */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '8px', justifyContent: 'flex-start' }}>
                                             {firstPageItems.map((item) => renderItemCard(item, section.id))}
                                         </div>
                                     </div>
