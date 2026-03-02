@@ -34,6 +34,11 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
+        // If clicking on an existing annotation area, don't start drawing
+        const target = e.target as HTMLElement;
+        const isAnnotationArea = target.hasAttribute('data-annotation-id');
+        if (isAnnotationArea) return;
+
         if (activeTool !== 'rect') {
             // If not drawing, check if we clicked outside to deselect
             if (e.target === containerRef.current || e.target === imgRef.current) {
@@ -253,11 +258,10 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                     return (
                         <div
                             key={ann.id}
+                            data-annotation-id={ann.id}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                if (activeTool === 'none') {
-                                    setSelectedAnnId(isSelected ? null : ann.id);
-                                }
+                                setSelectedAnnId(isSelected ? null : ann.id);
                             }}
                             style={{
                                 position: 'absolute',
@@ -266,7 +270,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                                 width: `${ann.width}%`,
                                 height: `${ann.height}%`,
                                 pointerEvents: 'auto',
-                                cursor: activeTool === 'none' ? 'pointer' : 'crosshair',
+                                cursor: 'pointer',
                                 zIndex: isSelected ? 30 : 20
                             }}
                         >
