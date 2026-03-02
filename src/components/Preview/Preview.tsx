@@ -11,7 +11,8 @@ export const Preview: React.FC = () => {
         <div className={`page-a4 template-${report.template.toLowerCase()}`}>
 
             {/* Sections rendering */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6rem' }}>
+            {/* Sections rendering - Reduced gap for cleaner layout */}
+            <div className="report-sections-container" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                 {report.sections.map((section) => {
                     const firstPageItems = section.items.slice(0, 5);
                     const remainingItems = section.items.slice(5);
@@ -57,7 +58,7 @@ export const Preview: React.FC = () => {
                     );
 
                     return (
-                        <div key={section.id} className="report-section" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        <div key={section.id} className="report-section" style={{ display: 'flex', flexDirection: 'column' }}>
                             {/* PAGE 1 Wrapper */}
                             <div className="report-page" onClick={() => setActiveIds(section.id, null)}>
                                 {/* Original 50/50 Layout: Image Left, List Right */}
