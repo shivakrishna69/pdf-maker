@@ -74,7 +74,7 @@ export const Preview: React.FC = () => {
                                                         width: '100%',
                                                         height: '600px',
                                                         display: 'block',
-                                                        objectFit: 'contain',
+                                                        objectFit: 'fill',
                                                         imageRendering: 'crisp-edges'
                                                     }}
                                                 />
