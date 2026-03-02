@@ -105,6 +105,7 @@ interface ReportState {
     setReport: (report: Report) => void;
     fetchUserReports: () => Promise<void>;
     saveToCloud: (report: Report) => Promise<void>;
+    updateAnnotationMarker: (sectionId: string, annotationId: string, marker: string) => void;
 }
 
 export const useReportStore = create<ReportState>()(
@@ -400,6 +401,24 @@ export const useReportStore = create<ReportState>()(
                     console.error('Failed to save report to cloud:', error);
                 }
             },
+
+            updateAnnotationMarker: (sectionId, annotationId, marker) => set((state) => {
+                const now = new Date().toISOString();
+                return {
+                    report: {
+                        ...state.report,
+                        updatedAt: now,
+                        sections: state.report.sections.map(sec =>
+                            sec.id === sectionId ? {
+                                ...sec,
+                                annotations: sec.annotations.map(ann =>
+                                    ann.id === annotationId ? { ...ann, customMarker: marker } : ann
+                                )
+                            } : sec
+                        )
+                    }
+                };
+            }),
         }),
         {
             name: 'stock-outage-report-storage',

@@ -20,6 +20,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
     const [pendingAnnotation, setPendingAnnotation] = useState<{ x: number, y: number, w: number, h: number } | null>(null);
     const [selectedAnnId, setSelectedAnnId] = useState<string | null>(null);
     const [editingLabelId, setEditingLabelId] = useState<string | null>(null);
+    const [tempMarker, setTempMarker] = useState<string>('');
 
     const containerRef = useRef<HTMLDivElement>(null);
     const imgRef = useRef<HTMLImageElement>(null);
@@ -106,12 +107,6 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
             .map((a, i) => ({ ...a, order: i + 1 })); // Re-order numbers
         updateSection(sectionId, { annotations: newAnns });
         if (selectedAnnId === id) setSelectedAnnId(null);
-    };
-
-    const updateMarker = (id: string, marker: string) => {
-        updateSection(sectionId, {
-            annotations: annotations.map(a => a.id === id ? { ...a, customMarker: marker } : a)
-        });
     };
 
     return (
@@ -296,21 +291,40 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                                     }}>
                                         <input
                                             autoFocus
-                                            value={ann.customMarker ?? ann.order.toString()}
-                                            onChange={(e) => updateMarker(ann.id, e.target.value)}
-                                            onBlur={() => setEditingLabelId(null)}
-                                            onKeyDown={(e) => e.key === 'Enter' && setEditingLabelId(null)}
+                                            value={tempMarker}
+                                            onChange={(e) => setTempMarker(e.target.value)}
+                                            onBlur={() => {
+                                                const { updateAnnotationMarker } = useReportStore.getState();
+                                                updateAnnotationMarker(sectionId, ann.id, tempMarker);
+                                                setEditingLabelId(null);
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    const { updateAnnotationMarker } = useReportStore.getState();
+                                                    updateAnnotationMarker(sectionId, ann.id, tempMarker);
+                                                    setEditingLabelId(null);
+                                                }
+                                            }}
                                             onClick={e => e.stopPropagation()}
                                             style={{ border: 'none', outline: 'none', fontSize: '0.85rem', padding: '2px 4px', width: '35px', textAlign: 'center', fontWeight: 'bold' }}
                                         />
-                                        <button onClick={(e) => { e.stopPropagation(); setEditingLabelId(null); }} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#10b981', display: 'flex', alignItems: 'center', padding: '2px' }}>
+                                        <button onClick={(e) => {
+                                            e.stopPropagation();
+                                            const { updateAnnotationMarker } = useReportStore.getState();
+                                            updateAnnotationMarker(sectionId, ann.id, tempMarker);
+                                            setEditingLabelId(null);
+                                        }} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#10b981', display: 'flex', alignItems: 'center', padding: '2px' }}>
                                             <Check size={16} />
                                         </button>
                                     </div>
                                 ) : (
                                     <>
                                         <div
-                                            onClick={(e) => { e.stopPropagation(); setEditingLabelId(ann.id); }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setTempMarker(ann.customMarker ?? ann.order.toString());
+                                                setEditingLabelId(ann.id);
+                                            }}
                                             style={{
                                                 background: '#fff', padding: '4px 8px', borderRadius: '4px',
                                                 cursor: 'pointer', boxShadow: 'var(--shadow-md)',
