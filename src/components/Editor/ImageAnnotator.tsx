@@ -312,17 +312,19 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({ sectionId, image
                                         <div
                                             onClick={(e) => { e.stopPropagation(); setEditingLabelId(ann.id); }}
                                             style={{
-                                                background: '#fff', padding: '6px', borderRadius: '4px',
+                                                background: '#fff', padding: '4px 8px', borderRadius: '4px',
                                                 cursor: 'pointer', boxShadow: 'var(--shadow-md)',
-                                                border: '1px solid #e2e8f0', display: 'flex',
-                                                alignItems: 'center', justifyContent: 'center'
+                                                border: `1.5px solid ${ann.color === 'red' ? '#ef4444' : ann.color === 'green' ? '#22c55e' : ann.color === 'yellow' ? '#f59e0b' : '#0000FF'}`,
+                                                display: 'flex', alignItems: 'center', gap: '6px',
+                                                fontWeight: 'bold', fontSize: '0.85rem', color: '#1e293b'
                                             }}
-                                            title="Edit Label"
+                                            title="Edit Number"
                                         >
                                             <div style={{
-                                                width: '14px', height: '14px', borderRadius: '50%',
+                                                width: '10px', height: '10px', borderRadius: '50%',
                                                 background: ann.color === 'red' ? '#ef4444' : ann.color === 'green' ? '#22c55e' : ann.color === 'yellow' ? '#f59e0b' : '#0000FF'
                                             }} />
+                                            <span>{ann.customMarker || ann.order}</span>
                                         </div>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); removeAnnotation(ann.id); }}
